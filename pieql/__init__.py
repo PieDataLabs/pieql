@@ -1,7 +1,8 @@
 from typing import Any
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse, Response
 import jmespath
 import asyncio
 from pydantic.json import pydantic_encoder
@@ -36,10 +37,15 @@ def pieql(param_name: str = "__schema"):
             if not schema:
                 return result
 
-            if not isinstance(result, JSONResponse):
+            if isinstance(result, JSONResponse):
+                data = json.loads(result.body)
+            elif isinstance(result, Response):
                 return result
-
-            data = json.loads(result.body)
+            else:
+                try:
+                    data = jsonable_encoder(result)
+                except Exception:
+                    return result
 
             try:
                 filtered = jmespath.search(schema, data)

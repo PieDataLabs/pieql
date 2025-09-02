@@ -8,7 +8,7 @@ with open('requirements.txt', 'r') as f:
 
 setup(
     name='pieql',
-    version='0.0.1',
+    version='0.0.2',
     python_requires=f'>=3.6',
     description='QL wrapper on top of existing FastAPI web service',
     url='https://github.com/PieDataLabs/pieql.git',
